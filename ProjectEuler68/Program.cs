@@ -8,43 +8,52 @@ namespace ProjectEuler68
 {
     class Program
     {
-
-        static bool IsMagic3Gon(int[] x)
+        static bool IsMagic5Gon(int[] x)
         {
-            bool answer = true;
+            int sum = x[0] + x[5] + x[6];
 
-            int sum = x[4 - 1] + x[3 - 1] + x[2 - 1];
+            if (sum != x[1] + x[6] + x[7]) return false;
+            if (sum != x[2] + x[7] + x[8]) return false;
+            if (sum != x[3] + x[8] + x[9]) return false;
+            if (sum != x[4] + x[9] + x[5]) return false;
 
-            if (sum != x[1 - 1] + x[2 - 1] + x[6 - 1]) answer = false;
-            if (sum != x[5 - 1] + x[1 - 1] + x[3 - 1]) answer = false;
+            return true;
+        }
+        
+        static UInt64 Value5Gon(int[] x)
+        {
+            UInt64 answer = 0;
+
+            int[] pattern = new int[15] { 0, 5, 6, 1, 6, 7, 2, 7, 8, 3, 8, 9, 4, 9, 5 };
+
+            for (int i = 0; i < 15; i++)
+            {
+                if (x[pattern[i]] == 10)
+                {
+                    answer *= (UInt64)100;
+                    answer += (UInt64)x[pattern[i]];
+                }
+                else
+                {
+                    answer *= (UInt64)10;
+                    answer += (UInt64)x[pattern[i]];
+                }
+            }
 
             return answer;
         }
 
-        static long Value3Gon(int[] x)
-        {
-            long answer = 0;
-            answer += x[4-1]; answer *= 10;
-            answer += x[3-1]; answer *= 10;
-            answer += x[2-1]; answer *= 10;
-
-            answer += x[6-1]; answer *= 10;
-            answer += x[2-1]; answer *= 10;
-            answer += x[1-1]; answer *= 10;
-
-            answer += x[5-1]; answer *= 10;
-            answer += x[1-1]; answer *= 10;
-            answer += x[3-1];
-            return answer;
-        }
+        
 
         static void Main(string[] args)
         {
 
-            const int max = 6;
+            const int max = 10;
 
             int[] Initial = new int[max];
             int[] Final = new int[max];
+
+            int[] pattern = new int[15] { 0, 5, 6, 1, 6, 7, 2, 7, 8, 3, 8, 9, 4, 9, 5 };
 
             for (int i = 0; i < max; i++)
             {
@@ -59,19 +68,18 @@ namespace ProjectEuler68
 
             bool KeepGoing = true, NextIsLast = false;
 
-            long answer = -1;
+            UInt64 answer = 0;
 
             while (KeepGoing)
             {
 
-                if (IsMagic3Gon(Perm) && Perm[3] < Perm[4] && Perm[3] < Perm[5])
+                if (IsMagic5Gon(Perm) && Perm.Take(5).Min() == Perm[0] && Perm.Take(5).Contains(10) == true)
                 {
-                    if (Value3Gon(Perm) > answer)
-                    {
-                        answer = Value3Gon(Perm);
-                    }
+                    if (Value5Gon(Perm) > answer)
+                        answer = Value5Gon(Perm);
+                    foreach (int x in pattern) Console.Write(Perm[x] + " ");
+                    Console.Write("\n");
                 }
-
                 if (!NextIsLast)
                 {
                     k = -1;
@@ -91,9 +99,7 @@ namespace ProjectEuler68
                         NextIsLast = true;
                 }
                 else
-                {
                     KeepGoing = false;
-                }
             }
             Console.WriteLine(answer);
         }
