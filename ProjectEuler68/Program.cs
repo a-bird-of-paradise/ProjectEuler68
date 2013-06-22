@@ -39,30 +39,28 @@ namespace ProjectEuler68
                     answer += (UInt64)x[pattern[i]];
                 }
             }
-
             return answer;
-        }
-
-        
+        }              
 
         static void Main(string[] args)
         {
 
-            const int max = 10;
+            System.Diagnostics.Stopwatch Timer = new System.Diagnostics.Stopwatch();
+            Timer.Start();
 
-            int[] Initial = new int[max];
-            int[] Final = new int[max];
+            int[] Initial = new int[10];
+            int[] Final = new int[10];
 
             int[] pattern = new int[15] { 0, 5, 6, 1, 6, 7, 2, 7, 8, 3, 8, 9, 4, 9, 5 };
 
-            for (int i = 0; i < max; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Initial[i] = i + 1;
-                Final[max - i - 1] = i + 1;
+                Final[10 - i - 1] = i + 1;
             }
 
-            int[] Perm = new int[max];
-            for (int i = 0; i < max; i++) Perm[i] = Initial[i];
+            int[] Perm = new int[10];
+            for (int i = 0; i < 10; i++) Perm[i] = Initial[i];
 
             int k = 0, l = 0, m = 0, Temp;
 
@@ -72,8 +70,9 @@ namespace ProjectEuler68
 
             while (KeepGoing)
             {
+                if (Perm[0] >= 7) break;
 
-                if (IsMagic5Gon(Perm) && Perm.Take(5).Min() == Perm[0] && Perm.Take(5).Contains(10) == true)
+                if (Perm.Take(5).Contains(10) == true && Perm.Take(5).Min() == Perm[0] && IsMagic5Gon(Perm))
                 {
                     if (Value5Gon(Perm) > answer)
                         answer = Value5Gon(Perm);
@@ -102,6 +101,7 @@ namespace ProjectEuler68
                     KeepGoing = false;
             }
             Console.WriteLine(answer);
+            Console.WriteLine(Timer.ElapsedMilliseconds);
         }
     }
 }
